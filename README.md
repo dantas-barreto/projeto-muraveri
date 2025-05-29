@@ -12,6 +12,8 @@ docker run -d --name db -e MYSQL_ROOT_PASSWORD=ifsp -v mariadb_data:/var/lib/mys
 
 ### acessar o db dentro do container
 Execute este comando para entrar no container EM EXECUÇÃO:
-```docker exec -it db mariadb -u root -p```
+```
+docker exec -it db mariadb -u root -p
+```
 
-A senha é: ifsp
+A senha é: ```ifsp```
