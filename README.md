@@ -17,3 +17,12 @@ docker exec -it db mariadb -u root -p
 ```
 
 A senha é: ```ifsp```
+
+Para criar o database no banco de dados execute o comando:
+```
+CREATE DATABASE app
+```
+Para sair do banco de dados:
+```
+quit
+```
