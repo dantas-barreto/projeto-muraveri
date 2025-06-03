@@ -7,7 +7,7 @@ docker pull mariadb
 ```
 e depois:
 ```
-docker run -d --name db -e MYSQL_ROOT_PASSWORD=ifsp -v mariadb_data:/var/lib/mysql -p 3308:3308 mariadb
+docker run -d --name db -e MYSQL_ROOT_PASSWORD=ifsp -v mariadb_data:/var/lib/mysql -p 3307:3307 mariadb
 ```
 
 ### acessar o db dentro do container
