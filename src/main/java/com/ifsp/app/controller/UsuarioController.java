@@ -1,5 +1,7 @@
-package com.ifsp.app;
+package com.ifsp.app.controller;
 
+import com.ifsp.app.repository.UsuarioRepository;
+import com.ifsp.app.modelo.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
