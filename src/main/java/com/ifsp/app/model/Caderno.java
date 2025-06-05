@@ -1,7 +1,7 @@
-package com.ifsp.app.modelo;
+package com.ifsp.app.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.ifsp.app.modelo.enuns.Cor;
+import com.ifsp.app.model.enuns.Cor;
 import jakarta.persistence.*;
 
 @Entity

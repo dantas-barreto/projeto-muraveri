@@ -1,6 +1,6 @@
-package com.ifsp.app.repository;
+package com.ifsp.app.model.repository;
 
-import com.ifsp.app.modelo.Caderno;
+import com.ifsp.app.model.Caderno;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CadernoRepository extends JpaRepository<Caderno, Long> {}

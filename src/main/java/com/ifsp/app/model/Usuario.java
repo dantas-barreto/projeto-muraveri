@@ -1,4 +1,4 @@
-package com.ifsp.app.modelo;
+package com.ifsp.app.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ public class Usuario {
     private String email;
     private String senha;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Caderno> cadernos = new ArrayList<>();
 

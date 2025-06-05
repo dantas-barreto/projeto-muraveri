@@ -1,4 +1,4 @@
-package com.ifsp.app.modelo.enuns;
+package com.ifsp.app.model.enuns;
 
 public enum Cor {
     VERMELHO,

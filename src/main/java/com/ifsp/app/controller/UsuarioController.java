@@ -1,8 +1,7 @@
 package com.ifsp.app.controller;
 
-import com.ifsp.app.repository.UsuarioRepository;
-import com.ifsp.app.modelo.Usuario;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ifsp.app.model.Usuario;
+import com.ifsp.app.service.UsuarioService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,16 +10,24 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioRepository repo;
+    private final UsuarioService usuarioService;
 
-    @PostMapping
-    public Usuario criar(@RequestBody Usuario u) {
-        return repo.save(u);
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping
     public List<Usuario> listar() {
-        return repo.findAll();
+        return usuarioService.listarTodos();
+    }
+
+    @PostMapping
+    public Usuario criar(@RequestBody Usuario usuario) {
+        return usuarioService.salvar(usuario);
+    }
+
+    @GetMapping("/{id}")
+    public Usuario buscarPorId(@PathVariable Long id) {
+        return usuarioService.buscarPorId(id);
     }
 }
