@@ -1,5 +1,6 @@
 package com.ifsp.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -18,8 +19,12 @@ public class Usuario {
     private String senha;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Caderno> cadernos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Anotacao> anotacoes = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -53,14 +58,15 @@ public class Usuario {
         return cadernos;
     }
 
-    public void createCaderno(String titulo) {
-        Caderno caderno = new Caderno();
-        caderno.setTitulo(titulo);
-        caderno.setUsuario(this);
-        cadernos.add(caderno);
+    public void setCadernos(List<Caderno> cadernos) {
+        this.cadernos = cadernos;
     }
 
-    public void deleteCaderno(Caderno caderno) {
-        cadernos.remove(caderno);
+    public List<Anotacao> getAnotacoes() {
+        return anotacoes;
+    }
+
+    public void setAnotacoes(List<Anotacao> anotacoes) {
+        this.anotacoes = anotacoes;
     }
 }

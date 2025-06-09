@@ -1,8 +1,12 @@
 package com.ifsp.app.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ifsp.app.model.enuns.Cor;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Caderno {
@@ -18,10 +22,9 @@ public class Caderno {
     @JsonBackReference
     private Usuario usuario;
 
-    //@OneToMany(mappedBy = "caderno")
-    //private List<Anotacao> anotacoes;
-
-    private Cor cor;
+    @OneToMany(mappedBy = "caderno", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Anotacao> anotacoes = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -41,5 +44,13 @@ public class Caderno {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public List<Anotacao> getAnotacoes() {
+        return anotacoes;
+    }
+
+    public void setAnotacoes(List<Anotacao> anotacoes) {
+        this.anotacoes = anotacoes;
     }
 }

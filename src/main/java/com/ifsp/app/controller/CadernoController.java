@@ -1,5 +1,6 @@
 package com.ifsp.app.controller;
 
+import com.ifsp.app.dto.CadernoDTO;
 import com.ifsp.app.model.Caderno;
 import com.ifsp.app.service.CadernoService;
 import org.springframework.web.bind.annotation.*;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/usuarios/{usuarioId}/cadernos")
+@RequestMapping("/cadernos")
 public class CadernoController {
 
     private final CadernoService cadernoService;
@@ -17,17 +18,27 @@ public class CadernoController {
     }
 
     @GetMapping
-    public List<Caderno> listar() {
-        return cadernoService.listarTodos();
+    public List<Caderno> findAll() {
+        return cadernoService.findAll();
     }
 
     @PostMapping
-    public Caderno criar(@RequestBody Caderno caderno) {
-        return cadernoService.salvar(caderno);
+    public Caderno create(@RequestBody CadernoDTO cadernoDTO) {
+        return cadernoService.save(cadernoDTO);
     }
 
     @GetMapping("/{id}")
-    public Caderno buscarPorId(@PathVariable Long id) {
-        return cadernoService.buscarPorId(id);
+    public Caderno findById(@PathVariable Long id) {
+        return cadernoService.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
+        cadernoService.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Caderno update(@PathVariable Long id, @RequestBody CadernoDTO cadernoDTO) {
+        return cadernoService.update(id, cadernoDTO);
     }
 }

@@ -1,5 +1,6 @@
 package com.ifsp.app.controller;
 
+import com.ifsp.app.dto.UsuarioDTO;
 import com.ifsp.app.model.Usuario;
 import com.ifsp.app.service.UsuarioService;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +18,27 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<Usuario> listar() {
-        return usuarioService.listarTodos();
-    }
-
-    @PostMapping
-    public Usuario criar(@RequestBody Usuario usuario) {
-        return usuarioService.salvar(usuario);
+    public List<Usuario> findAll() {
+        return usuarioService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Usuario buscarPorId(@PathVariable Long id) {
-        return usuarioService.buscarPorId(id);
+    public Usuario findById(@PathVariable Long id) {
+        return usuarioService.findById(id);
+    }
+
+    @PostMapping
+    public Usuario create(@RequestBody UsuarioDTO usuarioDTO) {
+        return usuarioService.save(usuarioDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
+        usuarioService.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Usuario update(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
+        return usuarioService.update(id, usuarioDTO);
     }
 }
