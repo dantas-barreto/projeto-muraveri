@@ -1,5 +1,6 @@
 package com.ifsp.app.controller;
 
+import com.ifsp.app.controller.dto.LoginRequestDTO;
 import com.ifsp.app.controller.dto.UsuarioDTO;
 import com.ifsp.app.model.Usuario;
 import com.ifsp.app.service.UsuarioService;
@@ -15,6 +16,11 @@ public class UsuarioController {
 
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
+    }
+
+    @PostMapping("/login")
+    public Usuario login(@RequestBody LoginRequestDTO loginRequest) {
+        return usuarioService.login(loginRequest.getEmail(), loginRequest.getSenha());
     }
 
     @GetMapping

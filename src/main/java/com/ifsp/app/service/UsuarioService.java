@@ -18,6 +18,17 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    public Usuario login(String email, String senha) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou senha inválidos"));
+
+        if (!usuario.getSenha().equals(senha)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou senha inválidos");
+        }
+
+        return usuario;
+    }
+
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
     }
