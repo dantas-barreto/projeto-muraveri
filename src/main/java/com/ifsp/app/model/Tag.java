@@ -2,7 +2,9 @@ package com.ifsp.app.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ifsp.app.model.enuns.Cor;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -24,6 +26,10 @@ public class Tag {
     private List<Caderno> cadernos;
 
     private String nome;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "A cor da tag é obrigatória")
+    private Cor cor;
 
     public Long getId() {
         return id;
@@ -51,5 +57,13 @@ public class Tag {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Cor getCor() {
+        return cor;
+    }
+
+    public void setCor(Cor cor) {
+        this.cor = cor;
     }
 }
