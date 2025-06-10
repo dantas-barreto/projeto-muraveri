@@ -1,6 +1,6 @@
 package com.ifsp.app.controller;
 
-import com.ifsp.app.dto.CadernoDTO;
+import com.ifsp.app.controller.dto.CadernoDTO;
 import com.ifsp.app.model.Caderno;
 import com.ifsp.app.service.CadernoService;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +40,15 @@ public class CadernoController {
     @PutMapping("/{id}")
     public Caderno update(@PathVariable Long id, @RequestBody CadernoDTO cadernoDTO) {
         return cadernoService.update(id, cadernoDTO);
+    }
+
+    @PostMapping("/{cadernoId}/tags/{tagId}")
+    public Caderno addTag(@PathVariable Long cadernoId, @PathVariable Long tagId) {
+        return cadernoService.addTagToCaderno(cadernoId, tagId);
+    }
+
+    @DeleteMapping("/{cadernoId}/tags/{tagId}")
+    public Caderno removeTag(@PathVariable Long cadernoId, @PathVariable Long tagId) {
+        return cadernoService.removeTagFromCaderno(cadernoId, tagId);
     }
 }

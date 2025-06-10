@@ -1,9 +1,11 @@
 package com.ifsp.app.service;
 
-import com.ifsp.app.dto.CadernoDTO;
+import com.ifsp.app.controller.dto.CadernoDTO;
 import com.ifsp.app.model.Caderno;
+import com.ifsp.app.model.Tag;
 import com.ifsp.app.model.Usuario;
 import com.ifsp.app.model.repository.CadernoRepository;
+import com.ifsp.app.model.repository.TagRepository;
 import com.ifsp.app.model.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,14 @@ public class CadernoService {
 
     private final CadernoRepository cadernoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final TagRepository tagRepository;
 
-    public CadernoService(CadernoRepository cadernoRepository, UsuarioRepository usuarioRepository) {
+    public CadernoService(CadernoRepository cadernoRepository,
+                          UsuarioRepository usuarioRepository,
+                          TagRepository tagRepository) {
         this.cadernoRepository = cadernoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.tagRepository = tagRepository;
     }
 
     public List<Caderno> findAll() {
@@ -58,5 +64,31 @@ public class CadernoService {
                                                                 "Usuário não encontrado"));
         }
         return cadernoRepository.save(caderno);
+    }
+
+    public Caderno addTagToCaderno(Long cadernoId, Long tagId) {
+        Caderno caderno = findById(cadernoId);
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag não encontrada"));
+
+        if (!caderno.getTags().contains(tag)) {
+            caderno.getTags().add(tag);
+            caderno = cadernoRepository.save(caderno);
+        }
+
+        return caderno;
+    }
+
+    public Caderno removeTagFromCaderno(Long cadernoId, Long tagId) {
+        Caderno caderno = findById(cadernoId);
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag não encontrada"));
+
+        if (caderno.getTags().contains(tag)) {
+            caderno.getTags().remove(tag);
+            caderno = cadernoRepository.save(caderno);
+        }
+
+        return caderno;
     }
 }

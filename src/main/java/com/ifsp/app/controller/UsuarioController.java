@@ -1,6 +1,6 @@
 package com.ifsp.app.controller;
 
-import com.ifsp.app.dto.UsuarioDTO;
+import com.ifsp.app.controller.dto.UsuarioDTO;
 import com.ifsp.app.model.Usuario;
 import com.ifsp.app.service.UsuarioService;
 import org.springframework.web.bind.annotation.*;

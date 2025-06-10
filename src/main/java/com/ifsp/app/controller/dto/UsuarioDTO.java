@@ -1,4 +1,4 @@
-package com.ifsp.app.dto;
+package com.ifsp.app.controller.dto;
 
 public class UsuarioDTO {
     private String nome;
@@ -8,10 +8,9 @@ public class UsuarioDTO {
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(String nome, String email, String senha) {
+    public UsuarioDTO(String nome, String email) {
         this.nome = nome;
         this.email = email;
-        this.senha = senha;
     }
 
     public String getNome() {
@@ -28,13 +27,5 @@ public class UsuarioDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
     }
 }

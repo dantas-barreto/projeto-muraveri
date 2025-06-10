@@ -1,8 +1,7 @@
 package com.ifsp.app.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ifsp.app.model.enuns.Cor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -23,8 +22,17 @@ public class Caderno {
     private Usuario usuario;
 
     @OneToMany(mappedBy = "caderno", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     private List<Anotacao> anotacoes = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "caderno_tag",
+            joinColumns = @JoinColumn(name = "caderno_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    @JsonManagedReference
+    private List<Tag> tags;
 
     public Long getId() {
         return id;
@@ -52,5 +60,13 @@ public class Caderno {
 
     public void setAnotacoes(List<Anotacao> anotacoes) {
         this.anotacoes = anotacoes;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }

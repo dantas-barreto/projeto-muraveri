@@ -1,12 +1,8 @@
 package com.ifsp.app.controller;
 
-import com.ifsp.app.dto.AnotacaoDTO;
+import com.ifsp.app.controller.dto.AnotacaoDTO;
 import com.ifsp.app.model.Anotacao;
-import com.ifsp.app.model.Caderno;
-import com.ifsp.app.model.Usuario;
 import com.ifsp.app.service.AnotacaoService;
-import com.ifsp.app.service.CadernoService;
-import com.ifsp.app.service.UsuarioService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,5 +40,15 @@ public class AnotacaoController {
     @PutMapping("/{id}")
     public Anotacao update(@PathVariable Long id, @RequestBody AnotacaoDTO anotacaoDTO) {
         return anotacaoService.update(id, anotacaoDTO);
+    }
+
+    @PostMapping("/{anotacaoId}/tags/{tagId}")
+    public Anotacao addTag(@PathVariable Long anotacaoId, @PathVariable Long tagId) {
+        return anotacaoService.addTagToAnotacao(anotacaoId, tagId);
+    }
+
+    @DeleteMapping("/{anotacaoId}/tags/{tagId}")
+    public Anotacao removeTag(@PathVariable Long anotacaoId, @PathVariable Long tagId) {
+        return anotacaoService.removeTagFromAnotacao(anotacaoId, tagId);
     }
 }

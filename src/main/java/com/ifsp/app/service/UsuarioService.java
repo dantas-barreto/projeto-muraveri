@@ -1,6 +1,6 @@
 package com.ifsp.app.service;
 
-import com.ifsp.app.dto.UsuarioDTO;
+import com.ifsp.app.controller.dto.UsuarioDTO;
 import com.ifsp.app.model.Usuario;
 import com.ifsp.app.model.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
@@ -23,14 +23,14 @@ public class UsuarioService {
     }
 
     public Usuario findById(Long id) {
-        return usuarioRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
     }
 
     public Usuario save(UsuarioDTO usuarioDTO) {
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioDTO.getNome());
         usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setSenha(usuarioDTO.getSenha());
         return usuarioRepository.save(usuario);
     }
 
@@ -48,9 +48,6 @@ public class UsuarioService {
         }
         if (usuarioDTO.getEmail() != null) {
             usuario.setEmail(usuarioDTO.getEmail());
-        }
-        if (usuarioDTO.getSenha() != null) {
-            usuario.setSenha(usuarioDTO.getSenha());
         }
         return usuarioRepository.save(usuario);
     }

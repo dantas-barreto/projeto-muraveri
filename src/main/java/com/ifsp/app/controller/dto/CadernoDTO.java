@@ -1,4 +1,4 @@
-package com.ifsp.app.dto;
+package com.ifsp.app.controller.dto;
 
 public class CadernoDTO {
     private String titulo;

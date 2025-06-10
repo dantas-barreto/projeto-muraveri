@@ -1,7 +1,11 @@
 package com.ifsp.app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Anotacao {
@@ -15,13 +19,22 @@ public class Anotacao {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonIgnoreProperties({"cadernos", "anotacoes", "senha"})
+    @JsonBackReference
     private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "caderno_id", nullable = true)
-    @JsonIgnoreProperties({"usuario", "anotacoes"})
+    @JsonBackReference
     private Caderno caderno;
+
+    @ManyToMany
+    @JoinTable(
+            name = "anotacao_tag",
+            joinColumns = @JoinColumn(name = "anotacao_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    @JsonManagedReference
+    private List<Tag> tags;
 
     public Long getId() {
         return id;
@@ -57,5 +70,13 @@ public class Anotacao {
 
     public void setCaderno(Caderno caderno) {
         this.caderno = caderno;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }
