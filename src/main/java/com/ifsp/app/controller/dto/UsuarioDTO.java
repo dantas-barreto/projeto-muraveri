@@ -8,7 +8,7 @@ public class UsuarioDTO {
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(String nome, String email) {
+    public UsuarioDTO(String nome, String email, String senha) {
         this.nome = nome;
         this.email = email;
     }
@@ -27,5 +27,13 @@ public class UsuarioDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }
