@@ -42,6 +42,7 @@ public class UsuarioService {
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioDTO.getNome());
         usuario.setEmail(usuarioDTO.getEmail());
+        usuario.setSenha(usuarioDTO.getSenha());
         return usuarioRepository.save(usuario);
     }
 
@@ -59,6 +60,9 @@ public class UsuarioService {
         }
         if (usuarioDTO.getEmail() != null) {
             usuario.setEmail(usuarioDTO.getEmail());
+        }
+        if (usuarioDTO.getSenha() != null) {
+            usuario.setSenha(usuarioDTO.getSenha());
         }
         return usuarioRepository.save(usuario);
     }
