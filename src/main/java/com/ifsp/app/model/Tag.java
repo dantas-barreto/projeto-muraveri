@@ -2,7 +2,7 @@ package com.ifsp.app.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ifsp.app.model.enuns.Cor;
+import com.ifsp.app.model.enums.Cor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 

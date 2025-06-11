@@ -1,6 +1,6 @@
 package com.ifsp.app.controller;
 
-import com.ifsp.app.model.enuns.Cor;
+import com.ifsp.app.model.enums.Cor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
