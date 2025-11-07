@@ -27,15 +27,6 @@ public class Anotacao {
     @JsonBackReference
     private Caderno caderno;
 
-    @ManyToMany
-    @JoinTable(
-            name = "anotacao_tag",
-            joinColumns = @JoinColumn(name = "anotacao_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    @JsonManagedReference
-    private List<Tag> tags;
-
     public Long getId() {
         return id;
     }
@@ -70,13 +61,5 @@ public class Anotacao {
 
     public void setCaderno(Caderno caderno) {
         this.caderno = caderno;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
     }
 }
