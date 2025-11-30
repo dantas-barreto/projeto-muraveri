@@ -1,12 +1,8 @@
 package com.ifsp.app.service;
 
-import com.ifsp.app.controller.dto.AnotacaoDTO;
+import com.ifsp.app.controller.dto.AnotacaoTreeDTO;
 import com.ifsp.app.model.Anotacao;
-import com.ifsp.app.model.Caderno;
-import com.ifsp.app.model.Usuario;
 import com.ifsp.app.model.repository.AnotacaoRepository;
-import com.ifsp.app.model.repository.CadernoRepository;
-import com.ifsp.app.model.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,15 +13,37 @@ import java.util.List;
 public class AnotacaoService {
 
     private final AnotacaoRepository anotacaoRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final CadernoRepository cadernoRepository;
 
-    public AnotacaoService(AnotacaoRepository anotacaoRepository,
-                           UsuarioRepository usuarioRepository,
-                           CadernoRepository cadernoRepository) {
+    public AnotacaoService(AnotacaoRepository anotacaoRepository) {
         this.anotacaoRepository = anotacaoRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.cadernoRepository = cadernoRepository;
+    }
+
+    public List<AnotacaoTreeDTO> obterArvoreCompleta() {
+        List<Anotacao> root = anotacaoRepository.findByPaiIdIsNull();
+        return root.stream()
+                .map(this::montarArvore)
+                .toList();
+    }
+
+    public List<AnotacaoTreeDTO> obterFilhos(Long id) {
+        return anotacaoRepository.findByPaiId(id)
+                .stream()
+                .map(this::montarArvore)
+                .toList();
+    }
+
+    public AnotacaoTreeDTO montarArvore(Anotacao anotacao) {
+        List<AnotacaoTreeDTO> filhos = anotacaoRepository.findByPaiId(anotacao.getId())
+                .stream()
+                .map(this::montarArvore)
+                .toList();
+
+        return new AnotacaoTreeDTO(
+                anotacao.getId(),
+                anotacao.getTitulo(),
+                anotacao.getConteudo(),
+                filhos
+        );
     }
 
     public List<Anotacao> findAll() {
@@ -37,48 +55,104 @@ public class AnotacaoService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anotação não encontrada"));
     }
 
-    public Anotacao save(AnotacaoDTO anotacaoDTO) {
-        Usuario usuario = usuarioRepository.findById(anotacaoDTO.getUsuarioId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
-        Caderno caderno = null;
-        if (anotacaoDTO.getCadernoId() != null && anotacaoDTO.getCadernoId() > 0) {
-            caderno = cadernoRepository.findById(anotacaoDTO.getCadernoId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Caderno não encontrado"));
+    public Anotacao save(String titulo, String conteudo, Long paiId) {
+
+        Long prev = getUltimoFilho(paiId);
+
+        Anotacao nova = new Anotacao(titulo, conteudo, paiId);
+        nova.setPrevId(prev);
+        nova.setNextId(null);
+
+        Anotacao salva = anotacaoRepository.save(nova);
+
+        if (prev != null) {
+            Anotacao anterior = findById(prev);
+            anterior.setNextId(salva.getId());
+            anotacaoRepository.save(anterior);
         }
-        Anotacao anotacao = new Anotacao();
-        anotacao.setTitulo(anotacaoDTO.getTitulo());
-        anotacao.setCorpo(anotacaoDTO.getCorpo());
-        anotacao.setUsuario(usuario);
-        anotacao.setCaderno(caderno);
-        return anotacaoRepository.save(anotacao);
+
+        return salva;
     }
 
-    public void deleteById(Long id) {
-        if (!anotacaoRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Anotação não encontrada");
-        }
-        anotacaoRepository.deleteById(id);
+    private Long getUltimoFilho(Long paiId) {
+        List<Anotacao> filhos = anotacaoRepository.findByPaiId(paiId);
+
+        return filhos.stream()
+                .filter(a -> a.getNextId() == null)
+                .map(Anotacao::getId)
+                .findFirst()
+                .orElse(null);
     }
 
-    public Anotacao update(Long id, AnotacaoDTO anotacaoDTO) {
-        Anotacao anotacao = findById(id);
-        if (anotacaoDTO.getTitulo() != null) {
-            anotacao.setTitulo(anotacaoDTO.getTitulo());
+    public Anotacao update(Long id, String titulo, String conteudo) {
+        Anotacao a = findById(id);
+        a.setTitulo(titulo);
+        a.setConteudo(conteudo);
+        return anotacaoRepository.save(a);
+    }
+
+    public void delete(Long id) {
+        Anotacao atual = findById(id);
+
+        Long prev = atual.getPrevId();
+        Long next = atual.getNextId();
+
+        if (prev != null) {
+            Anotacao p = findById(prev);
+            p.setNextId(next);
+            anotacaoRepository.save(p);
         }
-        if (anotacaoDTO.getCorpo() != null) {
-            anotacao.setCorpo(anotacaoDTO.getCorpo());
+
+        if (next != null) {
+            Anotacao n = findById(next);
+            n.setPrevId(prev);
+            anotacaoRepository.save(n);
         }
-        if (anotacaoDTO.getUsuarioId() != null) {
-            Usuario usuario = usuarioRepository.findById(anotacaoDTO.getUsuarioId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        anotacaoRepository.delete(atual);
+
+        List<Anotacao> filhos = anotacaoRepository.findByPaiId(id);
+        filhos.forEach(f -> delete(f.getId()));
+    }
+
+    public Anotacao move(Long id, Long novoPaiId, Long novoPrevId) {
+        Anotacao atual = findById(id);
+
+        Long prev = atual.getPrevId();
+        Long next = atual.getNextId();
+
+        if (prev != null) {
+            Anotacao p = findById(prev);
+            p.setNextId(next);
+            anotacaoRepository.save(p);
         }
-        if (anotacaoDTO.getCadernoId() != null) {
-            Caderno caderno = cadernoRepository.findById(anotacaoDTO.getCadernoId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Caderno não encontrado"));
-            anotacao.setCaderno(caderno);
-        } else {
-            anotacao.setCaderno(null);
+
+        if (next != null) {
+            Anotacao n = findById(prev);
+            n.setPrevId(prev);
+            anotacaoRepository.save(n);
         }
-        return anotacaoRepository.save(anotacao);
+
+        atual.setPaiId(novoPaiId);
+        atual.setPrevId(novoPrevId);
+
+        Long novoNextId = null;
+
+        if (novoPrevId != null) {
+            Anotacao novoPrev = findById(novoPrevId);
+            novoNextId = novoPrev.getNextId();
+            novoPrev.setNextId(id);
+            anotacaoRepository.save(novoPrev);
+        }
+
+        if (novoNextId != null) {
+            Anotacao novoNext = findById(novoNextId);
+            novoNext.setPrevId(id);
+            anotacaoRepository.save(novoNext);
+        }
+
+        atual.setNextId(novoNextId);
+
+        return anotacaoRepository.save(atual);
     }
 }

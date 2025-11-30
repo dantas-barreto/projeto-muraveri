@@ -1,8 +1,5 @@
 package com.ifsp.app.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,17 +12,25 @@ public class Anotacao {
     private Long id;
 
     private String titulo;
-    private String corpo;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonBackReference
-    private Usuario usuario;
+    private String conteudo;
 
     @ManyToOne
-    @JoinColumn(name = "caderno_id", nullable = true)
-    @JsonBackReference
-    private Caderno caderno;
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    private Long paiId;
+
+    private Long prevId;
+    private Long nextId;
+
+    public Anotacao() {
+    }
+
+    public Anotacao(String titulo, String conteudo, Long paiId) {
+        this.titulo = titulo;
+        this.conteudo = conteudo;
+        this.paiId = paiId;
+    }
 
     public Long getId() {
         return id;
@@ -39,27 +44,35 @@ public class Anotacao {
         this.titulo = titulo;
     }
 
-    public String getCorpo() {
-        return corpo;
+    public String getConteudo() {
+        return conteudo;
     }
 
-    public void setCorpo(String corpo) {
-        this.corpo = corpo;
+    public void setConteudo(String conteudo) {
+        this.conteudo = conteudo;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Long getPaiId() {
+        return paiId;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setPaiId(Long paiId) {
+        this.paiId = paiId;
     }
 
-    public Caderno getCaderno() {
-        return caderno;
+    public Long getPrevId() {
+        return prevId;
     }
 
-    public void setCaderno(Caderno caderno) {
-        this.caderno = caderno;
+    public void setPrevId(Long prevId) {
+        this.prevId = prevId;
+    }
+
+    public Long getNextId() {
+        return nextId;
+    }
+
+    public void setNextId(Long nextId) {
+        this.nextId = nextId;
     }
 }

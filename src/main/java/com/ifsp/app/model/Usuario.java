@@ -17,13 +17,17 @@ public class Usuario {
     private String email;
     private String senha;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Caderno> cadernos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Anotacao> anotacoes = new ArrayList<>();
+
+    public Usuario() {}
+
+    public Usuario(String email, String senha, String nome) {
+        this.email = email;
+        this.senha = senha;
+        this.nome = nome;
+    }
 
     public Long getId() {
         return id;
@@ -51,14 +55,6 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public List<Caderno> getCadernos() {
-        return cadernos;
-    }
-
-    public void setCadernos(List<Caderno> cadernos) {
-        this.cadernos = cadernos;
     }
 
     public List<Anotacao> getAnotacoes() {
